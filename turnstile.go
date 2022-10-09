@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-type HCaptcha struct {
+type Turnstile struct {
 	Secret       string
 	TurnstileURL string
 }
@@ -28,20 +28,20 @@ type Response struct {
 	CData string `json:"cdata"`
 }
 
-func New(secret string) *HCaptcha {
-	return &HCaptcha{
+func New(secret string) *Turnstile {
+	return &Turnstile{
 		Secret:       secret,
 		TurnstileURL: "https://challenges.cloudflare.com/turnstile/v0/siteverify",
 	}
 }
 
 // Verify verifies a "h-captcha-response" data field, with an optional remote IP set.
-func (h *HCaptcha) Verify(response, remoteip string) (*Response, error) {
-	values := url.Values{"secret": {h.Secret}, "response": {response}}
+func (t *Turnstile) Verify(response, remoteip string) (*Response, error) {
+	values := url.Values{"secret": {t.Secret}, "response": {response}}
 	if remoteip != "" {
 		values.Set("remoteip", remoteip)
 	}
-	resp, err := http.PostForm(h.TurnstileURL, values)
+	resp, err := http.PostForm(t.TurnstileURL, values)
 	if err != nil {
 		return nil, fmt.Errorf("HTTP error: %w", err)
 	}
