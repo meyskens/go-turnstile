@@ -1,3 +1,3 @@
-module github.com/Cystemzz/go-turnstile
+module github.com/meyskens/go-turnstile
 
 go 1.20
